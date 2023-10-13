@@ -6,6 +6,7 @@ import com.javatechie.service.JwtService;
 import com.javatechie.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
-public class ProductController {
+public class DemoController {
 	@Autowired
 	private JwtService jwtService;
 
@@ -26,12 +27,19 @@ public class ProductController {
 	@Autowired
 	private UserService userService;
 
-	@GetMapping("/welcome")
+	@GetMapping("/welcome-admin")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public String welcome() {
-		return "Hello, authentication is working";
+		return "Hello, admin";
+	}
+	
+	@GetMapping("/welcome-employee")
+	@PreAuthorize("hasAuthority('Employee')")
+	public String welcomeEmployee() {
+		return "Hello employee";
 	}
 
-	@GetMapping("/new")
+	@GetMapping("/hello-world")
 	public String myNew() {
 		return "hello, no authentication";
 	}
