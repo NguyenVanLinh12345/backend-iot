@@ -1,4 +1,4 @@
-package com.javatechie.util;   
+package com.javatechie.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
