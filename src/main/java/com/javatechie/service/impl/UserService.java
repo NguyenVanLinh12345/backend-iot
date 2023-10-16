@@ -36,7 +36,7 @@ public class UserService implements IUserService {
         catch (Exception e) {
             System.out.println("Đăng ký tài khoản lỗi rồi!! (Line 20)");
             e.printStackTrace();
-            return "Faild";
+            return "Fail";
         }
     }
 
