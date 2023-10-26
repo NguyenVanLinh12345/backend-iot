@@ -1,16 +1,13 @@
 package com.javatechie.controller.user;
 
-import com.javatechie.dto.AuthRequest;
-import com.javatechie.entity.UserInfo;
+import com.javatechie.dto.UserDto;
 import com.javatechie.service.impl.JwtService;
 import com.javatechie.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,27 +24,23 @@ public class LoginController {
 
     // đăng nhập
     @PostMapping("/login")
-    public String authenticateAndGetToken(@RequestBody AuthRequest authRequest){
+    public ResponseEntity<?> authenticateAndGetToken(@RequestBody UserDto userDto){
         try {
             Authentication authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
+                    .authenticate(new UsernamePasswordAuthenticationToken(userDto.getEmail(), userDto.getPassword()));
 
             if (authentication.isAuthenticated()) {
-                return jwtService.generateToken(authRequest.getEmail());
+                ResponseEntity.ok(jwtService.generateToken(userDto.getEmail()));
             }
-            else {
-                throw new UsernameNotFoundException("invalid user request !");
-            }
-        } catch (BadCredentialsException e) {
-            throw new BadCredentialsException("invalid user request !");
         } catch (Exception e) {
-            throw new UsernameNotFoundException("invalid user request !");
+            e.printStackTrace();
         }
+        return ResponseEntity.badRequest().body("invalid user request !");
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> signIn(@RequestBody UserInfo user) {
-        String responseSignUp = userService.addUser(user);
+    @PostMapping("/signup") // role == 0(employee), 1(admin), 2(admin + employee)
+    public ResponseEntity<?> signIn(@RequestBody UserDto user, @RequestParam("role") Integer role) {
+        String responseSignUp = userService.addUser(user, role);
         if(responseSignUp.equals("success")) {
             return ResponseEntity.ok("Sign up account success");
         }

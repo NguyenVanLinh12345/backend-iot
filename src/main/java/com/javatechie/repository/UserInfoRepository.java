@@ -1,12 +1,12 @@
 package com.javatechie.repository;
 
-import com.javatechie.entity.UserInfo;
+import com.javatechie.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UserInfoRepository extends JpaRepository<UserInfo, Integer> {
-    Optional<UserInfo> findByName(String username);
-    Optional<UserInfo> findByEmail(String email);
+public interface UserInfoRepository extends JpaRepository<User, Integer> {
+    Optional<User> findByName(String username);
+    Optional<User> findByEmail(String email);
     Boolean existsByEmail(String email);
 }
