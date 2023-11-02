@@ -10,4 +10,5 @@ public interface IMachineService {
     MachineDto findOne(Integer id);
     MachineDto updateMachine(Integer id);
     String deleteMachine(Integer id);
+    MachineDto saveMachine(MachineDto machine);
 }

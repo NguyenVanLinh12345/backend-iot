@@ -33,4 +33,16 @@ public class MachineConverter {
             return null;
         }
     }
+
+    public static Machine toEntity(MachineDto machineDto) {
+        try {
+            ModelMapper mapper = new ModelMapper();
+            Machine machine = mapper.map(machineDto, Machine.class);
+            return machine;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return new Machine();
+        }
+    }
 }

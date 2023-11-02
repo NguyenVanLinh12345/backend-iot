@@ -45,5 +45,14 @@
 			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Laptop24h/.m2/repository/org/modelmapper/modelmapper/2.4.4/modelmapper-2.4.4.jar" sourcepath="C:/Users/Laptop24h/.m2/repository/org/modelmapper/modelmapper/2.4.4/modelmapper-2.4.4-sources.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="maven.groupId" value="org.modelmapper"/>
+			<attribute name="maven.artifactId" value="modelmapper"/>
+			<attribute name="maven.version" value="2.4.4"/>
+			<attribute name="maven.scope" value="compile"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
