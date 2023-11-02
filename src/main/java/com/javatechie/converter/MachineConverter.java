@@ -20,10 +20,10 @@ public class MachineConverter {
 
     public static Machine toEntity(Machine machine, MachineDto machineDto) {
         try {
-            if(machineDto.getCycle() != null) {
+            if(machineDto.getCycle() != null) { // chu kỳ đảo trứng
                 machine.setCycle(machineDto.getCycle());
             }
-            if(machineDto.getLastEggTurning() != null) {
+            if(machineDto.getLastEggTurning() != null) { // update ngày đảo trứng
                 machine.setLastEggTurning(machineDto.getLastEggTurning());
             }
             return machine;

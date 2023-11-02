@@ -28,9 +28,8 @@ public class LoginController {
         try {
             Authentication authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(userDto.getEmail(), userDto.getPassword()));
-
             if (authentication.isAuthenticated()) {
-                ResponseEntity.ok(jwtService.generateToken(userDto.getEmail()));
+                return ResponseEntity.ok(jwtService.generateToken(userDto.getEmail()));
             }
         } catch (Exception e) {
             e.printStackTrace();

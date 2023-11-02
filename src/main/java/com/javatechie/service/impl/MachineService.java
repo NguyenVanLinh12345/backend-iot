@@ -49,9 +49,22 @@ public class MachineService implements IMachineService {
         return machineDto;
     }
 
+    // 1 api cho ESP 32 update ngay dao trung
+    // 1 api cho user thay doi chu ki dao trung
     @Override
-    public MachineDto updateMachine(Integer id) {
-        return null;
+    public MachineDto updateMachine(MachineDto machineDto) {
+        try {
+            Machine machine = machineRepository.findById(machineDto.getId()).orElse(null);
+            if(machine == null) return null;
+            machine = MachineConverter.toEntity(machine, machineDto);
+            if(machine == null) return null;
+            machine = machineRepository.save(machine);
+            return MachineConverter.toDto(machine);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -79,7 +92,7 @@ public class MachineService implements IMachineService {
         }
     }
 
-    @Override
+    @Override // admin có được phép thêm không?
     public MachineDto saveMachine(MachineDto machine) {
         try {
             Machine machineEntity = MachineConverter.toEntity(machine);

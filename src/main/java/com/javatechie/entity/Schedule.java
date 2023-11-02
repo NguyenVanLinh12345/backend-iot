@@ -21,7 +21,7 @@ public class Schedule {
     @ManyToOne
     @JoinColumn(name = "machine_id")
     private Machine machine;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "type_id")
     private TypeEgg typeEgg; //
 	public Integer getId() {

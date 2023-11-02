@@ -3,6 +3,8 @@ package com.javatechie.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Entity
 @Data
 @Table(name = "type_egg")
@@ -14,8 +16,16 @@ public class TypeEgg {
     private String name;
     @Column(name = "description", columnDefinition = "text")
     private String description;
-    @OneToOne(mappedBy = "typeEgg")
-    private Schedule schedule;
+	@Column(name = "temperature")
+	private Double temperature;
+	@Column(name = "number_hatch")
+	private Integer numberHatch;
+	@Column(name = "number_turn")
+	private Integer numberTurn;
+	@Column(name = "humidity")
+	private Double humidity;
+    @OneToMany(mappedBy = "typeEgg")
+    private List<Schedule> schedule;
 	public Integer getId() {
 		return id;
 	}
@@ -34,12 +44,36 @@ public class TypeEgg {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public Schedule getSchedule() {
+	public Double getTemperature() {
+		return temperature;
+	}
+	public void setTemperature(Double temperature) {
+		this.temperature = temperature;
+	}
+	public Integer getNumberHatch() {
+		return numberHatch;
+	}
+	public void setNumberHatch(Integer numberHatch) {
+		this.numberHatch = numberHatch;
+	}
+	public Integer getNumberTurn() {
+		return numberTurn;
+	}
+	public void setNumberTurn(Integer numberTurn) {
+		this.numberTurn = numberTurn;
+	}
+	public Double getHumidity() {
+		return humidity;
+	}
+	public void setHumidity(Double humidity) {
+		this.humidity = humidity;
+	}
+
+	public List<Schedule> getSchedule() {
 		return schedule;
 	}
-	public void setSchedule(Schedule schedule) {
+
+	public void setSchedule(List<Schedule> schedule) {
 		this.schedule = schedule;
 	}
-    
-    
 }
