@@ -2,7 +2,6 @@ package com.javatechie.controller.employee;
 
 import com.javatechie.dto.TypeEggDto;
 import com.javatechie.service.ITypeEggService;
-import com.javatechie.service.impl.TypeEggService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,14 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 @CrossOrigin("*")
-public class TypeEggCcontroller {
+public class TypeEggController {
 
     @Autowired
     private ITypeEggService typeEggService;
 
-    @PostMapping("/typeEgg/import")
+    @PostMapping("/typeEgg/import") // thêm mới loại trứng
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> saveTypeEgg(@RequestBody TypeEggDto typeEggDto) {
         TypeEggDto typeEgg = typeEggService.addTypeEgg(typeEggDto);
@@ -31,8 +30,8 @@ public class TypeEggCcontroller {
         return ResponseEntity.badRequest().body("Save typeEgg error");
     }
 
-    @PutMapping("/typeEgg/update")
-    @PreAuthorize("hasAuthority('ADMIN EMPLOYEE')")
+    @PutMapping("/typeEgg/update") // cập nhật thông tin loại trứng
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> updateTypeEgg(@RequestBody TypeEggDto typeEggDto) {
         TypeEggDto typeEgg = typeEggService.updateTypeEgg(typeEggDto);
         if(typeEgg == null) {
@@ -45,12 +44,12 @@ public class TypeEggCcontroller {
     }
 
     @GetMapping("/typeEgges")
-    @PreAuthorize("hasAuthority('ADMIN EMPLOYEE')")
+    @PreAuthorize("hasAuthority('ADMIN')") // lấy ra tất cả loại trứng trong database
     public List<TypeEggDto> findAll() {
         return typeEggService.findAll();
     }
     @GetMapping("typeEgg")
-    @PreAuthorize("hasAuthority('ADMIN EMPLOYEE')")
+    @PreAuthorize("hasAuthority('ADMIN')") // lấy ra 1 loại trứng
     public ResponseEntity<?> findOne(@RequestParam("id") Integer id) {
         TypeEggDto typeEggDto = typeEggService.findOne(id);
         if(typeEggDto == null) {
@@ -60,7 +59,7 @@ public class TypeEggCcontroller {
     }
 
     @DeleteMapping("/typeEgg")
-    @PreAuthorize("hasAuthority('ADMIN EMPLOYEE')")
+    @PreAuthorize("hasAuthority('ADMIN')") // xóa 1 loại trứng
     public ResponseEntity<?> deleteTypeEgg(@RequestParam("id") Integer id) {
         String message = typeEggService.deleteTypeEgg(id);
         if(message.equals("success")) {

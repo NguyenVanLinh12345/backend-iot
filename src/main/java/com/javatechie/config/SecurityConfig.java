@@ -43,7 +43,7 @@ public class SecurityConfig {
         return http.csrf().disable()
                 .authorizeHttpRequests().requestMatchers("/api/hello-world","/api/v1/login", "/api/v1/signup").permitAll()
                 .and()
-                .authorizeHttpRequests().requestMatchers("/api/**").authenticated()
+                .authorizeHttpRequests().requestMatchers("/api/**").permitAll()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
