@@ -122,14 +122,19 @@ public class UserService implements IUserService {
     public String deleteUser(Integer id) {
         try {
             List<Machine> listMachine = machineRepository.findAllByUserId(id);
+            List<Machine> list = new ArrayList<>();
             for(Machine machine : listMachine) {
                 machine.setUser(null);
+                list.add(machine);
             }
+            machineRepository.saveAll(list);
+            userInfoRepository.deleteById(id);
+            return "Success";
         }
         catch (Exception e) {
-
+            e.printStackTrace();
+            return "failed";
         }
-        return null;
     }
 
     // kiểm tra email có tồn tại không
