@@ -40,7 +40,7 @@ public class LoginController {
     @PostMapping("/signup") // role == 0(employee), 1(admin), 2(admin + employee)
     public ResponseEntity<?> signIn(@RequestBody UserDto user, @RequestParam("role") Integer role) {
         String responseSignUp = userService.addUser(user, role);
-        if(responseSignUp.equals("success")) {
+        if(responseSignUp.equals("Success")) {
             return ResponseEntity.ok("Sign up account success");
         }
         return ResponseEntity.badRequest().body(responseSignUp);
