@@ -3,6 +3,8 @@ package com.javatechie.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.sql.Date;
+
 @Entity
 @Data
 @Table(name = "problem")
@@ -14,6 +16,10 @@ public class Problem {
     private String description;
     @Column(name = "type")
     private String type;
+	@Column(name = "create_date")
+	private Date createDate;
+	@Column(name = "modifiled_date")
+	private Date modiledDate;
     @ManyToOne
     @JoinColumn(name = "machine_id")
     private Machine machine;

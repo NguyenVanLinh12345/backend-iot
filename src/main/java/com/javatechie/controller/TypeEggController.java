@@ -1,4 +1,4 @@
-package com.javatechie.controller.employee;
+package com.javatechie.controller;
 
 import com.javatechie.dto.TypeEggDto;
 import com.javatechie.service.ITypeEggService;

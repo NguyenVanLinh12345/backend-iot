@@ -1,4 +1,4 @@
-package com.javatechie.controller.user;
+package com.javatechie.controller;
 
 import com.javatechie.dto.UserDto;
 import com.javatechie.service.impl.JwtService;

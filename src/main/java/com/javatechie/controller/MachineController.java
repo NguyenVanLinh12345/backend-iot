@@ -1,6 +1,7 @@
-package com.javatechie.controller.employee;
+package com.javatechie.controller;
 
 import com.javatechie.dto.MachineDto;
+import com.javatechie.entity.Machine;
 import com.javatechie.service.IMachineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,8 +42,8 @@ public class MachineController {
     }
 
     @DeleteMapping("/machine")
-    public ResponseEntity<?> deleteMachine(@RequestParam("id") Integer id) {
-        String message = machineService.deleteMachine(id);
+    public ResponseEntity<?> deleteMachine(@RequestBody MachineDto machineDto) {
+        String message = machineService.deleteMachine(machineDto.getId());
         if(message.contains("success")) {
             return ResponseEntity.ok(message);
         }
