@@ -1,15 +1,21 @@
 package com.javatechie.service.impl;
 
+import com.javatechie.config.UserInfoUserDetails;
 import com.javatechie.converter.MachineConverter;
 import com.javatechie.dto.MachineDto;
+import com.javatechie.dto.MyUser;
 import com.javatechie.entity.Machine;
 import com.javatechie.entity.Problem;
 import com.javatechie.entity.Schedule;
+import com.javatechie.entity.User;
 import com.javatechie.repository.MachineRepository;
 import com.javatechie.repository.ProblemRepository;
 import com.javatechie.repository.ScheduleRepository;
+import com.javatechie.repository.UserInfoRepository;
 import com.javatechie.service.IMachineService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,6 +29,8 @@ public class MachineService implements IMachineService {
     private ProblemRepository problemRepository;
     @Autowired
     private ScheduleRepository scheduleRepository;
+    @Autowired
+    private UserInfoRepository userInfoRepository;
 
     // lấy ra toàn bộ machine trong bang machine từ database
     @Override
@@ -57,13 +65,13 @@ public class MachineService implements IMachineService {
             Machine machine = machineRepository.findById(machineDto.getId()).orElse(null);
             if(machine == null) return null;
             machine = MachineConverter.toEntity(machine, machineDto);
-            if(machine == null) return null;
+            if(machine == null) return new MachineDto();
             machine = machineRepository.save(machine);
             return MachineConverter.toDto(machine);
         }
         catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return new MachineDto();
         }
     }
 
@@ -96,8 +104,16 @@ public class MachineService implements IMachineService {
     public MachineDto saveMachine(MachineDto machine) {
         try {
             Machine machineEntity = MachineConverter.toEntity(machine);
-
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//            Object object = auth.getPrincipal();
+            UserInfoUserDetails user = (UserInfoUserDetails) auth.getPrincipal();
+            User userEntity = userInfoRepository.findByEmail(user.getUsername()).orElse(null);
+            if(userEntity == null) {
+                return null;
+            }
+            machineEntity.setUser(userEntity);
             machineEntity = machineRepository.save(machineEntity);
+//            System.out.println("Username " + userInfoUserDetails.getUsername());
             return MachineConverter.toDto(machineEntity);
         }
         catch (Exception e) {

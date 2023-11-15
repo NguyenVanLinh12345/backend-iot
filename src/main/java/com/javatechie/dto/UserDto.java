@@ -14,6 +14,7 @@ public class UserDto {
     private String password;
     private String description;
     private String roles;
+	private String message;
 	public int getId() {
 		return id;
 	}

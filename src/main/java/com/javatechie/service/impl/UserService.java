@@ -2,7 +2,9 @@ package com.javatechie.service.impl;
 
 import com.javatechie.converter.UserConverter;
 import com.javatechie.dto.UserDto;
+import com.javatechie.entity.Machine;
 import com.javatechie.entity.User;
+import com.javatechie.repository.MachineRepository;
 import com.javatechie.repository.UserInfoRepository;
 import com.javatechie.service.IUserService;
 import com.javatechie.util.CheckPassWord;
@@ -20,6 +22,8 @@ public class UserService implements IUserService {
     private UserInfoRepository userInfoRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private MachineRepository machineRepository;
     @Override
     public String addUser(UserDto user, Integer role) {
         try {
@@ -77,12 +81,60 @@ public class UserService implements IUserService {
 
     @Override
     public UserDto updateUser(UserDto userDto) {
-        return null;
+        UserDto response = new UserDto();
+        try {
+            User user = userInfoRepository.findById(userDto.getId()).orElse(null);
+            if(user == null) {
+                response.setMessage("Can not found user!!");
+                return response;
+            }
+            // thay mật khẩu user
+            if(userDto.getPassword() != null) {
+                String newPassword = userDto.getPassword();
+                Boolean checkPassword = CheckPassWord.isStrongPassword(newPassword);
+                if(!checkPassword) {
+                    response.setMessage("Password is not valid");
+                    return response;
+                }
+                user.setPassword(passwordEncoder.encode(newPassword));
+                userInfoRepository.save(user);
+                response.setMessage("Change password success!!");
+                return response;
+            }
+            user = UserConverter.toEntity(user, userDto);
+            if(user == null) {
+                response.setMessage("Update info user error!!");
+                return response;
+            }
+            user = userInfoRepository.save(user);
+            response = UserConverter.toDto(user);
+            response.setMessage("Update info user success");
+            return response;
+        }
+        catch (Exception e) {
+            response.setMessage("Update info user fail");
+            e.printStackTrace();
+            return response;
+        }
     }
 
     @Override
     public String deleteUser(Integer id) {
-        return null;
+        try {
+            List<Machine> listMachine = machineRepository.findAllByUserId(id);
+            List<Machine> list = new ArrayList<>();
+            for(Machine machine : listMachine) {
+                machine.setUser(null);
+                list.add(machine);
+            }
+            machineRepository.saveAll(list);
+            userInfoRepository.deleteById(id);
+            return "Success";
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return "failed";
+        }
     }
 
     // kiểm tra email có tồn tại không

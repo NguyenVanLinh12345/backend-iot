@@ -29,4 +29,20 @@ public class UserConverter {
             return null;
         }
     }
+
+    public static User toEntity(User user, UserDto userDto) {
+        try {
+            if(userDto.getName() != null) {
+                user.setName(userDto.getName());
+            }
+            if(userDto.getDescription() != null) {
+                user.setDescription(userDto.getDescription());
+            }
+            return user;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

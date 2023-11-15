@@ -25,6 +25,8 @@ public class User {
     private String description;
     @Column(name = "roles", columnDefinition = "varchar(255)")
     private String roles;
+	@Column(name = "deleted")
+	private Integer deleted;
     @OneToMany(mappedBy = "user")
     private List<Machine> machineList;
 	public int getId() {
