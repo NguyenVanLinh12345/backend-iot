@@ -26,8 +26,8 @@ public class ScheduleService implements IScheduleService {
     private TypeEggRepository typeEggRepository;
 
     @Override
-    public List<ScheduleDto> findAll() {
-        List<Schedule> scheduleList = scheduleRepository.findAll();
+    public List<ScheduleDto> findAll(Integer machineId) {
+        List<Schedule> scheduleList = scheduleRepository.findAllByMachineId(machineId);
         List<ScheduleDto> scheduleDtos = new ArrayList<>();
         for(Schedule schedule : scheduleList) {
             scheduleDtos.add(ScheduleConverter.toDto(schedule));

@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/admin/api")
@@ -18,10 +19,10 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @GetMapping("/users")
+    @GetMapping("/users") // lay ra toan bo user theo role trong database
     @PreAuthorize("hasAuthority('ADMIN')")
-    public List<UserDto> findAllUser() {
-        List<UserDto> listUsers = userService.findAllUser();
+    public List<UserDto> findAllUser(@RequestParam("role") Optional<String> role) {
+        List<UserDto> listUsers = userService.findAllUser(role.orElse(""));
         return listUsers;
     }
 
@@ -36,9 +37,18 @@ public class UserController {
     }
 
     @PutMapping("/user")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')") // admin thay đổi thông tin của các employee khác
     public ResponseEntity<?> updateUser(@RequestBody UserDto userDto) {
-        UserDto userResponse = userService.updateUser(userDto);
+        UserDto userResponse = userService.updateUser(userDto, 1); // 1 = ADMIN
+        if(userResponse.getMessage().contains("success")) {
+            return ResponseEntity.ok(userResponse);
+        }
+        return ResponseEntity.badRequest().body(userResponse.getMessage());
+    }
+
+    @PutMapping("/change/info") // tự thay đổi thông tin của chính mình
+    public ResponseEntity<?> updateEmployee(@RequestBody UserDto userDto) {
+        UserDto userResponse = userService.updateUser(userDto, 2); // 2 = EMPLOYEE
         if(userResponse.getMessage().contains("success")) {
             return ResponseEntity.ok(userResponse);
         }

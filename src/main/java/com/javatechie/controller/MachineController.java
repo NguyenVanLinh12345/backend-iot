@@ -6,6 +6,7 @@ import com.javatechie.service.IMachineService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,9 +19,16 @@ public class MachineController {
     @Autowired
     private IMachineService machineService;
 
-    @GetMapping("/machines")
+    @GetMapping("/machines") // lấy ra toàn bộ machine có trong database chỉ của admin
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<MachineDto> findAllMachine() {
         List<MachineDto> listMachine = machineService.findAll();
+        return listMachine;
+    }
+
+    @GetMapping("/machines/{userId}") // lấy ra toàn bộ machine có trong database chỉ của admin
+    public List<MachineDto> findAllMachineByEmployee(@PathVariable("userId") Integer userId) {
+        List<MachineDto> listMachine = machineService.findAllByUser(userId);
         return listMachine;
     }
 
@@ -55,6 +63,7 @@ public class MachineController {
     }
 
     @PostMapping("/machine")
+    @PreAuthorize("hasAuthority('ADMIN')") // chi admin duoc them moii machine
     public ResponseEntity<?> saveMachine(@RequestBody MachineDto machineDto) {
         MachineDto machineResponse = machineService.saveMachine(machineDto);
         if(machineResponse == null) {

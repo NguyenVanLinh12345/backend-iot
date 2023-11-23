@@ -13,4 +13,6 @@ public class MachineDto {
     private Double cycle;
 	private String name;
     private String message;
+    private Integer employeeId;
+    private String employeeName;
 }
