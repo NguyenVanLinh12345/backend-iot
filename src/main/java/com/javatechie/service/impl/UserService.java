@@ -30,6 +30,9 @@ public class UserService implements IUserService {
     @Override
     public String addUser(UserDto user, Integer role) {
         try {
+            if(user.getEmail() == null) {
+                return "Email can not null";
+            }
             Boolean checkEmail = checkEmailExist(user.getEmail());
             if(checkEmail) { // email đã tồn tại trong cơ sở dữ liệu
                 return "Email already exists ";
@@ -87,7 +90,6 @@ public class UserService implements IUserService {
         UserDto response = new UserDto();
         User user;
         try {
-            Integer userId;
             if(role.equals(1)) { // TH là admin sửa thông tin của các employee
                 user = userInfoRepository.findById(userDto.getId()).orElse(null);
             }
