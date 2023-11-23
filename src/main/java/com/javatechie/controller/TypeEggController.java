@@ -48,7 +48,7 @@ public class TypeEggController {
     public List<TypeEggDto> findAll() {
         return typeEggService.findAll();
     }
-    @GetMapping("typeEgg")
+    @GetMapping("/typeEgg")
     @PreAuthorize("hasAuthority('ADMIN')") // lấy ra 1 loại trứng
     public ResponseEntity<?> findOne(@RequestParam("id") Integer id) {
         TypeEggDto typeEggDto = typeEggService.findOne(id);
