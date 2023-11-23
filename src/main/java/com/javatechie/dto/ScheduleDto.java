@@ -15,6 +15,8 @@ public class ScheduleDto {
     private Date lastDay;
     private Integer quantity;
     private String description;
+	private Integer machineId;
+	private Integer typeEggId;
 	public Integer getId() {
 		return id;
 	}

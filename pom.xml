@@ -89,6 +89,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>api-IOT</finalName>
 	</build>
 
 

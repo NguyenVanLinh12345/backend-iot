@@ -62,12 +62,25 @@ public class MachineService implements IMachineService {
     @Override
     public MachineDto updateMachine(MachineDto machineDto) {
         try {
+            MachineDto machineResponse = new MachineDto();
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            UserInfoUserDetails userDetails = (UserInfoUserDetails) auth.getPrincipal();
+            User user = userInfoRepository.findByEmail(userDetails.getUsername()).orElse(null);
             Machine machine = machineRepository.findById(machineDto.getId()).orElse(null);
+            if(user == null || user.getId() != machine.getUser().getId()) {
+                machineResponse.setMessage("You do not have permission to edit this incubator information!!");
+                return machineResponse;
+            }
             if(machine == null) return null;
             machine = MachineConverter.toEntity(machine, machineDto);
             if(machine == null) return new MachineDto();
-            machine = machineRepository.save(machine);
-            return MachineConverter.toDto(machine);
+            Machine machineNew = machineRepository.findByName(machineDto.getName()).orElse(null);
+            if(machineNew == null || machineNew.getId().equals(machine.getId())) {
+                machine = machineRepository.save(machine);
+                return MachineConverter.toDto(machine);
+            }
+            machineResponse.setMessage("Name machine has been duplicated!!");
+            return machineResponse;
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -104,8 +117,12 @@ public class MachineService implements IMachineService {
     public MachineDto saveMachine(MachineDto machine) {
         try {
             Machine machineEntity = MachineConverter.toEntity(machine);
+            if(checkNameMachine(machineEntity.getName())) {
+                MachineDto machineDto = new MachineDto();
+                machineDto.setMessage("Name machine has been duplicated!!");
+                return machineDto;
+            }
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//            Object object = auth.getPrincipal();
             UserInfoUserDetails user = (UserInfoUserDetails) auth.getPrincipal();
             User userEntity = userInfoRepository.findByEmail(user.getUsername()).orElse(null);
             if(userEntity == null) {
@@ -113,12 +130,15 @@ public class MachineService implements IMachineService {
             }
             machineEntity.setUser(userEntity);
             machineEntity = machineRepository.save(machineEntity);
-//            System.out.println("Username " + userInfoUserDetails.getUsername());
             return MachineConverter.toDto(machineEntity);
         }
         catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private Boolean checkNameMachine(String name) {
+        return machineRepository.existsByName(name);
     }
 }

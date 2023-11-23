@@ -1,4 +1,4 @@
-package com.javatechie.controller.user;
+package com.javatechie.controller;
 
 import com.javatechie.dto.UserDto;
 import com.javatechie.service.impl.JwtService;
@@ -31,10 +31,11 @@ public class LoginController {
             if (authentication.isAuthenticated()) {
                 return ResponseEntity.ok(jwtService.generateToken(userDto.getEmail()));
             }
+            return ResponseEntity.badRequest().body("Invalid user request !");
         } catch (Exception e) {
             e.printStackTrace();
+            return ResponseEntity.badRequest().body("Tài khoản hoặc mật khất không chính xác");
         }
-        return ResponseEntity.badRequest().body("invalid user request !");
     }
 
     @PostMapping("/signup") // role == 0(employee), 1(admin), 2(admin + employee)

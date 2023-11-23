@@ -1,7 +1,9 @@
-package com.javatechie.controller.employee;
+package com.javatechie.controller;
 
 import com.javatechie.dto.MachineDto;
+import com.javatechie.entity.Machine;
 import com.javatechie.service.IMachineService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,12 +39,15 @@ public class MachineController {
         if(machineResponse == null) {
             return ResponseEntity.badRequest().body("Can not found machine!!");
         }
+        else if(machineResponse.getMessage() != null) {
+            return ResponseEntity.badRequest().body(machineResponse.getMessage());
+        }
         return ResponseEntity.ok(machineResponse);
     }
 
     @DeleteMapping("/machine")
-    public ResponseEntity<?> deleteMachine(@RequestParam("id") Integer id) {
-        String message = machineService.deleteMachine(id);
+    public ResponseEntity<?> deleteMachine(@RequestBody MachineDto machineDto) {
+        String message = machineService.deleteMachine(machineDto.getId());
         if(message.contains("success")) {
             return ResponseEntity.ok(message);
         }
@@ -54,6 +59,9 @@ public class MachineController {
         MachineDto machineResponse = machineService.saveMachine(machineDto);
         if(machineResponse == null) {
             return ResponseEntity.badRequest().body("Save machine error!!");
+        }
+        else if (machineResponse.getMessage() != null) {
+            return ResponseEntity.badRequest().body(machineResponse.getMessage());
         }
         return ResponseEntity.ok(machineResponse);
     }

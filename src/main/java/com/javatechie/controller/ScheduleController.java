@@ -1,4 +1,4 @@
-package com.javatechie.controller.employee;
+package com.javatechie.controller;
 
 import com.javatechie.dto.ScheduleDto;
 import com.javatechie.service.IScheduleService;
@@ -8,7 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -37,8 +36,8 @@ public class ScheduleController {
 
     @PostMapping("/schedule/import")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<?> saveSchedule(@RequestBody ScheduleDto scheduleDto, @RequestParam("machineId") Integer machineId, @RequestParam("typeEggId") Integer typeEggId) {
-        ScheduleDto schedule = scheduleService.saveSchedule(scheduleDto, machineId, typeEggId);
+    public ResponseEntity<?> saveSchedule(@RequestBody ScheduleDto scheduleDto) {
+        ScheduleDto schedule = scheduleService.saveSchedule(scheduleDto, scheduleDto.getMachineId(), scheduleDto.getTypeEggId());
         if(schedule == null) {
             return ResponseEntity.badRequest().body("Save schedule error");
         }
@@ -47,10 +46,8 @@ public class ScheduleController {
 
     @PutMapping("/schedule")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public ResponseEntity<?> updateSchedule(@RequestBody ScheduleDto scheduleDto,
-                                            @RequestParam("machineId")Optional<Integer> machineId,
-                                            @RequestParam("typeEggId") Optional<Integer> typeEggId) {
-        ScheduleDto schedule = scheduleService.updateSchedule(scheduleDto, typeEggId.orElse(0), machineId.orElse(0));
+    public ResponseEntity<?> updateSchedule(@RequestBody ScheduleDto scheduleDto) {
+        ScheduleDto schedule = scheduleService.updateSchedule(scheduleDto, scheduleDto.getTypeEggId(), scheduleDto.getMachineId());
         if(schedule == null) {
             return ResponseEntity.badRequest().body("Can not update schedule");
         }

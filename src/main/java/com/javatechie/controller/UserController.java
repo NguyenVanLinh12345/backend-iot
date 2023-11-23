@@ -1,4 +1,4 @@
-package com.javatechie.controller.admin;
+package com.javatechie.controller;
 
 import com.javatechie.dto.UserDto;
 import com.javatechie.service.IUserService;

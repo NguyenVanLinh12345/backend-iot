@@ -17,4 +17,16 @@ public class ProblemConverter {
             return null;
         }
     }
+
+    public static Problem toEntity(ProblemDto problemDto) {
+        try {
+            ModelMapper mapper = new ModelMapper();
+            Problem problem = mapper.map(problemDto, Problem.class);
+            return problem;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

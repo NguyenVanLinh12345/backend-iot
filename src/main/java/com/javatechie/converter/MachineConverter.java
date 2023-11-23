@@ -26,6 +26,9 @@ public class MachineConverter {
             if(machineDto.getLastEggTurning() != null) { // update ngày đảo trứng
                 machine.setLastEggTurning(machineDto.getLastEggTurning());
             }
+            if(machineDto.getName() != null) {
+                machine.setName(machineDto.getName());
+            }
             return machine;
         }
         catch (Exception e) {

@@ -2,11 +2,16 @@ package com.javatechie.dto;
 
 import lombok.Data;
 
+import java.sql.Date;
+
 @Data
 public class ProblemDto {
     private Integer id;
     private String description;
     private String type;
+	private Integer machineId;
+	private Date createDate;
+	private Date modiledDate;
 	public Integer getId() {
 		return id;
 	}
