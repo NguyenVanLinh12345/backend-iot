@@ -22,6 +22,7 @@ public class UserConverter {
         try {
             ModelMapper mapper = new ModelMapper();
             UserDto userDto = mapper.map(user, UserDto.class);
+            userDto.setPassword(null);
             return userDto;
         }
         catch (Exception e) {

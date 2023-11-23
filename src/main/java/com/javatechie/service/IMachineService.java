@@ -1,6 +1,7 @@
 package com.javatechie.service;
 
 import com.javatechie.dto.MachineDto;
+import com.javatechie.entity.Machine;
 
 import java.util.List;
 
@@ -11,4 +12,5 @@ public interface IMachineService {
     MachineDto updateMachine(MachineDto machineDto);
     String deleteMachine(Integer id);
     MachineDto saveMachine(MachineDto machine);
+    List<MachineDto> findAllByUser(Integer userId);
 }

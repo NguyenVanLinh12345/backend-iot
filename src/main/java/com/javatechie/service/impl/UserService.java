@@ -1,5 +1,6 @@
 package com.javatechie.service.impl;
 
+import com.javatechie.config.UserInfoUserDetails;
 import com.javatechie.converter.UserConverter;
 import com.javatechie.dto.UserDto;
 import com.javatechie.entity.Machine;
@@ -10,6 +11,8 @@ import com.javatechie.service.IUserService;
 import com.javatechie.util.CheckPassWord;
 import com.javatechie.util.ConstUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -57,8 +60,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<UserDto> findAllUser() {
-        List<User> listUserEntity = userInfoRepository.findAll();
+    public List<UserDto> findAllUser(String role) {
+        List<User> listUserEntity = userInfoRepository.findAllByRole(role);
         List<UserDto> listUserDto = new ArrayList<>();
         for(User user : listUserEntity) {
             UserDto userDto = UserConverter.toDto(user);
@@ -80,10 +83,23 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDto updateUser(UserDto userDto) {
+    public UserDto updateUser(UserDto userDto, Integer role) {
         UserDto response = new UserDto();
+        User user;
         try {
-            User user = userInfoRepository.findById(userDto.getId()).orElse(null);
+            Integer userId;
+            if(role.equals(1)) { // TH là admin sửa thông tin của các employee
+                user = userInfoRepository.findById(userDto.getId()).orElse(null);
+            }
+            else { // TH employee chỉnh sửa thông tin của bản thân
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                UserInfoUserDetails userDetails = (UserInfoUserDetails) auth.getPrincipal();
+                user = userInfoRepository.findByEmail(userDetails.getUsername()).orElse(null);
+                if(user == null || user.getId() != userDto.getId()) {
+                    response.setMessage("You cannot change other employees of information!!");
+                    return response;
+                }
+            }
             if(user == null) {
                 response.setMessage("Can not found user!!");
                 return response;

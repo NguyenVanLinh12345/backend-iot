@@ -3,7 +3,6 @@ package com.javatechie.service.impl;
 import com.javatechie.config.UserInfoUserDetails;
 import com.javatechie.converter.MachineConverter;
 import com.javatechie.dto.MachineDto;
-import com.javatechie.dto.MyUser;
 import com.javatechie.entity.Machine;
 import com.javatechie.entity.Problem;
 import com.javatechie.entity.Schedule;
@@ -62,20 +61,19 @@ public class MachineService implements IMachineService {
     @Override
     public MachineDto updateMachine(MachineDto machineDto) {
         try {
+            User user = new User();
             MachineDto machineResponse = new MachineDto();
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            UserInfoUserDetails userDetails = (UserInfoUserDetails) auth.getPrincipal();
-            User user = userInfoRepository.findByEmail(userDetails.getUsername()).orElse(null);
-            Machine machine = machineRepository.findById(machineDto.getId()).orElse(null);
-            if(user == null || user.getId() != machine.getUser().getId()) {
-                machineResponse.setMessage("You do not have permission to edit this incubator information!!");
-                return machineResponse;
+            if(machineDto.getEmployeeId() != null) {// TH thay đổi employee quản lý machine
+                user = userInfoRepository.findById(machineDto.getEmployeeId()).orElse(null);
             }
+            Machine machine = machineRepository.findById(machineDto.getId()).orElse(null);
+
             if(machine == null) return null;
             machine = MachineConverter.toEntity(machine, machineDto);
             if(machine == null) return new MachineDto();
             Machine machineNew = machineRepository.findByName(machineDto.getName()).orElse(null);
             if(machineNew == null || machineNew.getId().equals(machine.getId())) {
+                if(user != null) machine.setUser(user);
                 machine = machineRepository.save(machine);
                 return MachineConverter.toDto(machine);
             }
@@ -122,9 +120,7 @@ public class MachineService implements IMachineService {
                 machineDto.setMessage("Name machine has been duplicated!!");
                 return machineDto;
             }
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            UserInfoUserDetails user = (UserInfoUserDetails) auth.getPrincipal();
-            User userEntity = userInfoRepository.findByEmail(user.getUsername()).orElse(null);
+            User userEntity = userInfoRepository.findById(machine.getEmployeeId()).orElse(null);
             if(userEntity == null) {
                 return null;
             }
@@ -136,6 +132,16 @@ public class MachineService implements IMachineService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public List<MachineDto> findAllByUser(Integer userId) {
+        List<Machine> listMachine = machineRepository.findAllByUserId(userId);
+        List<MachineDto> listMachineDto = new ArrayList<>();
+        for(Machine machine : listMachine) {
+            listMachineDto.add(MachineConverter.toDto(machine));
+        }
+        return listMachineDto;
     }
 
     private Boolean checkNameMachine(String name) {
