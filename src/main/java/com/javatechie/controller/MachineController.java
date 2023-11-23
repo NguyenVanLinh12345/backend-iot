@@ -54,8 +54,8 @@ public class MachineController {
     }
 
     @DeleteMapping("/machine")
-    public ResponseEntity<?> deleteMachine(@RequestBody MachineDto machineDto) {
-        String message = machineService.deleteMachine(machineDto.getId());
+    public ResponseEntity<?> deleteMachine(@RequestParam("id") Integer id) {
+        String message = machineService.deleteMachine(id);
         if(message.contains("success")) {
             return ResponseEntity.ok(message);
         }
@@ -63,7 +63,7 @@ public class MachineController {
     }
 
     @PostMapping("/machine")
-    @PreAuthorize("hasAuthority('ADMIN')") // chi admin duoc them moii machine
+    @PreAuthorize("hasAuthority('ADMIN')") // chi admin duoc them moi machine
     public ResponseEntity<?> saveMachine(@RequestBody MachineDto machineDto) {
         MachineDto machineResponse = machineService.saveMachine(machineDto);
         if(machineResponse == null) {
