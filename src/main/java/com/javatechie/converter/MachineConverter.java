@@ -11,6 +11,7 @@ public class MachineConverter {
             ModelMapper mapper = new ModelMapper();
             MachineDto machineDto = mapper.map(machine, MachineDto.class);
             machineDto.setEmployeeName(machine.getUser().getName());
+            machineDto.setEmployeeId(machine.getUser().getId());
             return machineDto;
         }
         catch (Exception e) {

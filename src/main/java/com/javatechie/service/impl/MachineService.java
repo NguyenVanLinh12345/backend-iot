@@ -141,7 +141,13 @@ public class MachineService implements IMachineService {
         List<Machine> listMachine = machineRepository.findAllByUserId(userId);
         List<MachineDto> listMachineDto = new ArrayList<>();
         for(Machine machine : listMachine) {
-            listMachineDto.add(MachineConverter.toDto(machine));
+            MachineDto machineDto = MachineConverter.toDto(machine);
+            List<ProblemDto> listProblem = new ArrayList<>();
+            for(Problem problem : machine.getProblemList()) {
+                listProblem.add(ProblemConverter.toDto(problem));
+            }
+            machineDto.setListProblem(listProblem);
+            listMachineDto.add(machineDto);
         }
         return listMachineDto;
     }
