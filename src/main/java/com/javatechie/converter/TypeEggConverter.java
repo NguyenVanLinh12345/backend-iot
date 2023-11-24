@@ -33,7 +33,7 @@ public class TypeEggConverter {
     public static TypeEgg toEntity(TypeEgg typeEgg, TypeEggDto typeEggDto) {
         try {
            if(typeEggDto.getHumidity() != null) {
-               typeEgg.setHumidity(typeEgg.getHumidity());
+               typeEgg.setHumidity(typeEggDto.getHumidity());
            }
            if(typeEggDto.getTemperature() != null) {
                typeEgg.setTemperature(typeEggDto.getTemperature());
