@@ -16,6 +16,7 @@ public class ScheduleController {
     @Autowired
     private IScheduleService scheduleService;
 
+    @GetMapping("/schedules")
     public List<ScheduleDto> findAll(@RequestParam("machineId") Integer machineId) {
         List<ScheduleDto> scheduleDtos = scheduleService.findAll(machineId);
         return scheduleDtos;

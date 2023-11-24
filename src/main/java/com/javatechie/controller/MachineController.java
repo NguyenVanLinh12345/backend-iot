@@ -26,7 +26,7 @@ public class MachineController {
         return listMachine;
     }
 
-    @GetMapping("/machines/{userId}") // lấy ra toàn bộ machine có trong database chỉ của admin
+    @GetMapping("/machines/{userId}")
     public List<MachineDto> findAllMachineByEmployee(@PathVariable("userId") Integer userId) {
         List<MachineDto> listMachine = machineService.findAllByUser(userId);
         return listMachine;
