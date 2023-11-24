@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import lombok.Data;
 
 import java.sql.Date;
+import java.util.List;
 
 @Data
 public class MachineDto {
@@ -15,4 +16,5 @@ public class MachineDto {
     private String message;
     private Integer employeeId;
     private String employeeName;
+    private List<ProblemDto> listProblem;
 }

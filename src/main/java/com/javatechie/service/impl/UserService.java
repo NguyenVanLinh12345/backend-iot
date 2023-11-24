@@ -155,6 +155,27 @@ public class UserService implements IUserService {
         }
     }
 
+    @Override
+    public UserDto getInfoUser() {
+        try {
+            UserDto responseUser = new UserDto();
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            UserInfoUserDetails userDetails = (UserInfoUserDetails) auth.getPrincipal();
+            User user = userInfoRepository.findByEmail(userDetails.getUsername()).orElse(null);
+            if(user == null) {
+                responseUser.setMessage("Can not found info of you");
+                return responseUser;
+            }
+            responseUser = UserConverter.toDto(user);
+            return responseUser;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Get info user error!!");
+        }
+        return null;
+    }
+
     // kiểm tra email có tồn tại không
     private Boolean checkEmailExist(String email) {
         return userInfoRepository.existsByEmail(email);

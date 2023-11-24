@@ -25,6 +25,6 @@ public class Machine {
     private User user;
     @OneToMany(mappedBy = "machine")
     private List<Schedule> scheduleList;
-    @OneToMany(mappedBy = "machine")
+    @OneToMany(mappedBy = "machine", fetch = FetchType.LAZY)
     private List<Problem> problemList;
 }

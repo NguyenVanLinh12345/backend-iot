@@ -32,6 +32,12 @@ public class MachineController {
         return listMachine;
     }
 
+    @GetMapping("/machines/user")
+    public List<MachineDto> findAllMachineOfUser(){
+        List<MachineDto> listMachineDto = machineService.findAllMachineOfUser();
+        return listMachineDto;
+    }
+
     @GetMapping("/machine")
     public ResponseEntity<?> findOne(@RequestParam("id") Integer id) {
         MachineDto machineDto = machineService.findOne(id);

@@ -13,4 +13,5 @@ public interface IMachineService {
     String deleteMachine(Integer id);
     MachineDto saveMachine(MachineDto machine);
     List<MachineDto> findAllByUser(Integer userId);
+    List<MachineDto> findAllMachineOfUser();
 }

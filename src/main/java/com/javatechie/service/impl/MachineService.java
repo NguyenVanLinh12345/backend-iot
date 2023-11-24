@@ -2,7 +2,9 @@ package com.javatechie.service.impl;
 
 import com.javatechie.config.UserInfoUserDetails;
 import com.javatechie.converter.MachineConverter;
+import com.javatechie.converter.ProblemConverter;
 import com.javatechie.dto.MachineDto;
+import com.javatechie.dto.ProblemDto;
 import com.javatechie.entity.Machine;
 import com.javatechie.entity.Problem;
 import com.javatechie.entity.Schedule;
@@ -142,6 +144,31 @@ public class MachineService implements IMachineService {
             listMachineDto.add(MachineConverter.toDto(machine));
         }
         return listMachineDto;
+    }
+
+    @Override
+    public List<MachineDto> findAllMachineOfUser() {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            UserInfoUserDetails userDetails = (UserInfoUserDetails) auth.getPrincipal();
+            User user = userInfoRepository.findByEmail(userDetails.getUsername()).orElse(null);
+            List<Machine> listMachine = machineRepository.findAllByUserId(user.getId());
+            List<MachineDto> listMachineDto = new ArrayList<>();
+            for(Machine machine : listMachine) {
+                MachineDto machineDto = MachineConverter.toDto(machine);
+                List<ProblemDto> listProblem = new ArrayList<>();
+                for(Problem problem : machine.getProblemList()) {
+                    listProblem.add(ProblemConverter.toDto(problem));
+                }
+                machineDto.setListProblem(listProblem);
+                listMachineDto.add(machineDto);
+            }
+            return listMachineDto;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private Boolean checkNameMachine(String name) {

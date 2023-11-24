@@ -2,6 +2,7 @@ package com.javatechie.service;
 
 import com.javatechie.dto.UserDto;
 import com.javatechie.entity.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
@@ -13,6 +14,6 @@ public interface IUserService {
     // lấy ra 1 user trong database(role = EMPLOYEE)
     UserDto findOneUser(Integer id);
     UserDto updateUser(UserDto userDto, Integer role);
-
     String deleteUser(Integer id);
+    UserDto getInfoUser();
 }
