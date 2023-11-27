@@ -1,8 +1,10 @@
 package com.javatechie.controller;
 
+import com.javatechie.config.UserInfoUserDetails;
 import com.javatechie.dto.UserDto;
 import com.javatechie.service.impl.JwtService;
 import com.javatechie.service.impl.UserService;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,7 +31,11 @@ public class LoginController {
             Authentication authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(userDto.getEmail(), userDto.getPassword()));
             if (authentication.isAuthenticated()) {
-                return ResponseEntity.ok(jwtService.generateToken(userDto.getEmail()));
+                UserInfoUserDetails userDetails = (UserInfoUserDetails) authentication.getPrincipal();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("token", jwtService.generateToken(userDto.getEmail()));
+                jsonObject.put("role", userDetails.getRoles());
+                return ResponseEntity.ok(jsonObject);
             }
             return ResponseEntity.badRequest().body("Invalid user request !");
         } catch (Exception e) {

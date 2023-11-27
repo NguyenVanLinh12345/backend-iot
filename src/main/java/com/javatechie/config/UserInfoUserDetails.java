@@ -14,6 +14,7 @@ public class UserInfoUserDetails implements UserDetails {
 
     private String email;
     private String password;
+    private String roles;
     private List<GrantedAuthority> authorities;
 
     public UserInfoUserDetails(User user) {
@@ -22,6 +23,7 @@ public class UserInfoUserDetails implements UserDetails {
         authorities= Arrays.stream(user.getRoles().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
+        this.roles = user.getRoles();
     }
 
     @Override
@@ -57,5 +59,13 @@ public class UserInfoUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles;
     }
 }
